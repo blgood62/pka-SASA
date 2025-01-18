@@ -1,5 +1,5 @@
 #将该命令输入终端
-for file in /home/zr/E3/PDBlib/*.pka; do
+for file in #你的地址; do
     pdb_id=$(basename "$file" .pka)  # 获取不带后缀的文件名作为pdb_id
     grep "^LYS" "$file" | awk -v pdb="$pdb_id" '{print "PDB ID: " pdb, "LYS", $2, $3, $4}' >> lys_pka_values.txt
 done
