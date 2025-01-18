@@ -1,0 +1,46 @@
+#在终端中输入该指令
+
+# 定义 PDB 文件夹路径
+PDB_DIR="/path/to/pdb_files"
+OUTPUT_DIR="/path/to/output_files"
+
+# 检查 PROPKA 是否安装
+if! command -v propka3 &> /dev/null; then
+    echo "Error: PROPKA is not installed or not in the PATH."
+    exit 1
+fi
+
+# 检查输入文件夹是否包含.pdb 文件
+if [[ $(ls "${PDB_DIR}"/*.pdb 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "No PDB files found in $PDB_DIR; Exiting."
+    exit 0
+fi
+
+# 创建输出文件夹
+mkdir -p "$OUTPUT_DIR"
+
+# 遍历文件夹中的所有.pdb 文件
+for file in "${PDB_DIR}"/*.pdb; do
+    # 获取文件名（不带路径和扩展名）
+    base_name=$(basename "$file".pdb)
+
+    # 检查是否已经存在相同名称的.pka 文件
+    if [[ -f "$OUTPUT_DIR/${base_name}.pka" ]]; then
+        echo "Skipping $file: pKa file already exists."
+        continue
+    fi
+
+    # 执行 PROPKA 计算
+    propka3 "$file" || { echo "Failed to process $file. Skipping."; continue; }
+
+    # 检查生成的文件并移动
+    if [[ -f "${base_name}.pka" && -f "${base_name}.txt" ]]; then
+        mv "${base_name}.pka" "$OUTPUT_DIR/${base_name}.pka"
+        mv "${base_name}.txt" "$OUTPUT_DIR/${base_name}.txt"
+        echo "Processed $file and moved results to $OUTPUT_DIR"
+    else
+        echo "Error: Output files for $file are missing"
+    fi
+done
+
+echo "All files processed. Results saved in $OUTPUT_DIR"
