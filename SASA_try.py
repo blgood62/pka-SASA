@@ -3,7 +3,7 @@ from Bio.PDB import PDBParser
 from Bio.PDB.SASA import ShrakeRupley
 
 # 设置PDB文件夹路径
-pdb_folder_path = r"D:\Dayi_shang\CADD\E3\E3 123\AF_stru"
+pdb_folder_path = ""
 
 # 获取文件夹中第一个PDB文件的路径
 pdb_files = [f for f in os.listdir(pdb_folder_path) if f.endswith('.pdb')]
