@@ -76,7 +76,7 @@ def main():
         df.at[index, 'LYS SASA'] = lys_sasa_str
 
     # 保存新的Excel文件
-    new_excel_file_path = r"D:\Dayi_shang\123456789123.xlsx"
+    new_excel_file_path = 
     df.to_excel(new_excel_file_path, index=False)
 
     logging.info(f"New Excel file with Lys SASA values has been saved to {new_excel_file_path}")
